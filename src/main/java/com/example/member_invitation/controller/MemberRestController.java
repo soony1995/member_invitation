@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberRestController {
     private final MemberService memberService;
 
-    @GetMapping("/users/{id}")
-    public Member getUsers (
+    @GetMapping("/member/{id}")
+    public Member getMember (
             @PathVariable Long id
     ){
         return memberService.getMember(id);
