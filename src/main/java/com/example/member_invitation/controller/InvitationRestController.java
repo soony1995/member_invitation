@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class InvitationRestController {
     public final InvitationService invitationService;
 
-    @PostMapping("/invite/")
-    public CreateInviteCode.Response createInviteCode(
-            @RequestBody @Valid final CreateInviteCode.Request dto
-    ){
-//        Invitation resVo = invitationService.createInviteCode(dto);
-    }
+//    @PostMapping("/invite/")
+//    public CreateInviteCode.Response createInviteCode(
+//            @RequestBody @Valid final CreateInviteCode.Request dto
+//    ){
+////        Invitation resVo = invitationService.createInviteCode(dto);
+//    }
 
 }
