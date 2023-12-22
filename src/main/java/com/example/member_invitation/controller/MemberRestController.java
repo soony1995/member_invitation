@@ -7,15 +7,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor // 의존성 주입에 필요한 인자들을 받아와준다.
 public class MemberRestController {
     private final MemberService memberService;
 
     @GetMapping("/member/{id}")
-    public Member getMember (
+    public GetMember.Response getMember (
             @PathVariable Long id
     ){
-        return memberService.getMember(id);
+        Optional<Member> member = memberService.getMember(id);
+        return GetMember.toResponseDto(member);
     }
 }

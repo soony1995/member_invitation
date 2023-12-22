@@ -2,22 +2,29 @@ package com.example.member_invitation.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.*;
 
 public class CreateInviteCode {
-    public static class Request{
-        @NotEmpty
-        String inviteMemberName;
-        @NotEmpty
-        String inviteMemberPhoneNumber;
+    @Getter
+    @Setter
+    public static class Request {
+        private String inviteMemberName;
+        private String inviteMemberPhoneNumber;
         @Email
-        String inviteMemberEmail;
-        @NotEmpty
-        Long inviteGroupId;
+        private String inviteMemberEmail;
+        private Long inviteGroupId;
     }
 
-    public static class Response{
-        Long inviteGroupId;
-        Long inviteMemberName;
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class Response {
         String inviteCode;
+    }
+
+    public static CreateInviteCode.Response toResponseDto(final String code) {
+        return new CreateInviteCode.Response(code);
     }
 }
