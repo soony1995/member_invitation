@@ -2,26 +2,28 @@ package com.example.member_invitation.config;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import redis.embedded.RedisServer;
 
 @Configuration
 public class RedisServerConfig {
-    @Value("${spring.data.redis.port}")
-    private int redisPort;
-    private RedisServer redisServer;
+    private final RedisServer redisServer = new RedisServer();
 
     @PostConstruct
-    public void startRedis() {
-        redisServer = new RedisServer(redisPort);
-        redisServer.start();
-    }
+       public void initRedis() {
+           try {
+               redisServer.start();
+           } catch (Exception e) {
+               System.out.println("start"+e.getMessage());
+           }
+       }
 
     @PreDestroy
-    public void stopRedis() {
-        if (redisServer != null) {
-            redisServer.stop();
-        }
-    }
+       public void destroyRedis() {
+           try {
+               redisServer.stop();
+           } catch (Exception e) {
+               System.out.println("end"+e.getMessage());
+           }
+       }
 }
