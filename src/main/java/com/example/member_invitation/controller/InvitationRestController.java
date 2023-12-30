@@ -15,17 +15,13 @@ public class InvitationRestController {
     public final AcceptInviteCode  acceptInviteCode;
 
     @PostMapping("/invite")
-    public CreateInviteCode.Response createInviteCode(
-            @Valid @RequestBody final CreateInviteCode.Request dto
-    ) {
-        String code = invitationService.createInviteCode(dto);
-        return CreateInviteCode.toResponseDto(code);
+    public CreateInviteCode.Response createInviteCode(@Valid @RequestBody final CreateInviteCode.Request request) {
+        return CreateInviteCode.Response.from(invitationService.createInviteCode(request));
     }
 
     @GetMapping("/accept/{code}")
     public AcceptInvite.Response acceptInviteCode(@PathVariable String code) {
-        String msg = acceptInviteCode.acceptInviteCode(code);
-        return AcceptInvite.toResponseDto(msg);
+        return AcceptInvite.Response.from(acceptInviteCode.acceptInviteCode(code));
     }
 }
 

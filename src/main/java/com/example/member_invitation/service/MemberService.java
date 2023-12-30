@@ -1,7 +1,10 @@
 package com.example.member_invitation.service;
 
+import ch.qos.logback.core.spi.ErrorCodes;
 import com.example.member_invitation.domain.Member;
+import com.example.member_invitation.exception.MemberException;
 import com.example.member_invitation.repository.MemberRepository;
+import com.example.member_invitation.type.ErrCode;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,14 +16,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    @Transactional // 굳이?
-    public Optional<Member> getMember(Long id){
-        if (id < 0){
-            throw new RuntimeException("member id can't be zero value");
+
+    @Transactional
+    public Optional<Member> getMember(Long id) {
+        return findMember(id);
+    }
+
+    private Optional<Member> findMember(Long id) {
+        if (id < 1) {
+            throw new MemberException(ErrCode.BAD_REQUEST);
         }
         Optional<Member> member = memberRepository.findById(id);
-        if (member.isPresent()){
-            throw new EntityNotFoundException("Member not found with ID: " + id);
+        if (member.isEmpty()) {
+            throw new MemberException(ErrCode.ACCOUNT_NOT_FOUND);
         }
         return member;
     }

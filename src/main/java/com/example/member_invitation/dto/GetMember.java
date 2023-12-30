@@ -17,19 +17,18 @@ public class GetMember {
         private String name;
         private String phoneNumber;
         private String email;
-    }
 
-    public static GetMember.Response toResponseDto(final Optional<Member> optionalMember) {
-        if (optionalMember.isEmpty()) {
-            throw new EntityNotFoundException("Member not found");
+        public static Response from(final Optional<Member> optionalMember) {
+            if (optionalMember.isEmpty()) {
+                throw new EntityNotFoundException("Member not found");
+            }
+            Member member = optionalMember.get();
+            return Response.builder()
+                    .id(member.getId())
+                    .name(member.getName())
+                    .phoneNumber(member.getPhoneNumber())
+                    .email(member.getEmail())
+                    .build();
         }
-        Member member = optionalMember.get();
-        return Response.builder()
-                .id(member.getId())
-                .name(member.getName())
-                .phoneNumber(member.getPhoneNumber())
-                .email(member.getEmail())
-                .build();
-
     }
 }

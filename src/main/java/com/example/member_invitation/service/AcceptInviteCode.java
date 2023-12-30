@@ -1,7 +1,11 @@
 package com.example.member_invitation.service;
 
+import ch.qos.logback.core.spi.ErrorCodes;
 import com.example.member_invitation.domain.Member;
+import com.example.member_invitation.exception.InviteException;
 import com.example.member_invitation.repository.MemberRepository;
+import com.example.member_invitation.repository.RedisRepository;
+import com.example.member_invitation.type.ErrCode;
 import com.example.member_invitation.type.MemberStatus;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -9,33 +13,44 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class AcceptInviteCode {
-    private final RedisServiceLettuce redisService;
+    private final RedisRepository redisRepository;
     private final MemberRepository memberRepository;
 
+    @Transactional
     public String acceptInviteCode(String code) {
-        try {
-            String memberName = redisService.getStringOps(code);
-            if (memberName == null) {
-                return "Redis에서 해당 키에 대한 값이 존재하지 않습니다.";
-            }
+        String memberName = checkValidCode(code);
+        expireInviteCode(code);
+        newMember(getMember(memberName));
+        return "초대 코드 처리 완료";
+    }
 
-            boolean isRemoved = redisService.removeValue(code);
-            if (!isRemoved) {
-                return "Redis 삭제 작업 실패";
-            }
+    private void newMember(Member member) {
+        memberRepository.save(Member.builder()
+                .email(member.getEmail())
+                .name(member.getName())
+                .phoneNumber(member.getPhoneNumber())
+                .status(MemberStatus.ACTIVATE)
+                .build());
+    }
 
-            Member member = memberRepository.findByName(memberName)
-                    .orElseThrow(() -> new EntityNotFoundException("Entity not found with name: " + memberName));
+    private Member getMember(String memberName) {
+        return memberRepository.findByName(memberName)
+                .orElseThrow(() -> new InviteException(ErrCode.ACCOUNT_NOT_FOUND));
+    }
 
-            member.setStatus(MemberStatus.ACTIVATE);
-            memberRepository.save(member);
-            return "초대 코드 처리 완료";
-        } catch (Exception e) {
-            // 로깅
-            return "초대 코드 처리 중 오류 발생: " + e.getMessage();
+    private void expireInviteCode(String code) {
+        if (!redisRepository.removeValue(code)) {
+            throw new InviteException(ErrCode.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private String checkValidCode(String code) {
+        String memberName = redisRepository.getValue(code);
+        if (memberName.isEmpty()) {
+            throw new InviteException(ErrCode.CODE_NOT_FOUND);
+        }
+        return memberName;
     }
 }

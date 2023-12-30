@@ -19,6 +19,6 @@ public class MemberRestController {
             @PathVariable Long id
     ){
         Optional<Member> member = memberService.getMember(id);
-        return GetMember.toResponseDto(member);
+        return GetMember.Response.from(member);
     }
 }

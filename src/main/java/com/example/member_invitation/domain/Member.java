@@ -29,4 +29,11 @@ public class Member {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime lastModifiedAt;
+
+    public Member newMember(Member member){
+        return Member.builder(
+
+        ).build();
+    }
+
 }

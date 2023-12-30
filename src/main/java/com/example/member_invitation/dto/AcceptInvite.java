@@ -12,9 +12,11 @@ public class AcceptInvite {
     @Builder
     public static class Response {
         String msg;
-    }
 
-    public static AcceptInvite.Response toResponseDto(final String msg) {
-        return new AcceptInvite.Response(msg);
+        public static Response from(final String msg) {
+            return AcceptInvite.Response.builder()
+                    .msg(msg)
+                    .build();
+        }
     }
 }

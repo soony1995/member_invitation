@@ -1,7 +1,6 @@
 package com.example.member_invitation.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 public class CreateInviteCode {
@@ -22,9 +21,10 @@ public class CreateInviteCode {
     @Builder
     public static class Response {
         String inviteCode;
-    }
-
-    public static CreateInviteCode.Response toResponseDto(final String code) {
-        return new CreateInviteCode.Response(code);
+        public static Response from(final String code) {
+            return Response.builder()
+                    .inviteCode(code)
+                    .build();
+        }
     }
 }
