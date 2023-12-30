@@ -3,7 +3,6 @@ package com.example.member_invitation.dto;
 import com.example.member_invitation.domain.Member;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.*;
-
 import java.util.Optional;
 
 public class GetMember {

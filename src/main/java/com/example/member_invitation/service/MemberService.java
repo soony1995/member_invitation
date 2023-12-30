@@ -13,7 +13,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    @Transactional // 굳이?
+    @Transactional
     public Optional<Member> getMember(Long id){
         if (id < 0){
             throw new RuntimeException("member id can't be zero value");
