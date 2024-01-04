@@ -2,9 +2,11 @@ package com.example.member_invitation.exception;
 
 import com.example.member_invitation.dto.ErrorResponse;
 import com.example.member_invitation.type.ErrCode;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -19,6 +21,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MemberException.class)
     public ResponseEntity<ErrorResponse> handleMemberException(MemberException e) {
         return buildResponseEntity(e.getMessage(), e.getErrorCode(), e.getStatusCode());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> ValidException(MethodArgumentNotValidException e) {
+        return buildResponseEntity(e.getMessage(), ErrCode.BAD_REQUEST, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

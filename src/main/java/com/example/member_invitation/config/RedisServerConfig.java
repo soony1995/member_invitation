@@ -2,23 +2,29 @@ package com.example.member_invitation.config;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import redis.embedded.RedisServer;
 
-import java.io.IOException;
 
+@Slf4j
 @Configuration
 public class RedisServerConfig {
     private final RedisServer redisServer;
 
-    public RedisServerConfig(@Value("${spring.data.redis.port}") int port) {
-        this.redisServer = new RedisServer(port);
+    public RedisServerConfig() {
+        this.redisServer = RedisServer.builder()
+                .setting("maxmemory 128M")
+                .build();
     }
 
     @PostConstruct
     public void startRedis() {
-        this.redisServer.start();
+        try {
+            this.redisServer.start();
+        } catch (Exception e) {
+            log.error("", e);
+        }
     }
 
     @PreDestroy

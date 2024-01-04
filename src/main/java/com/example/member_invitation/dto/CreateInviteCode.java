@@ -15,7 +15,6 @@ public class CreateInviteCode {
     }
 
     @Getter
-    @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
