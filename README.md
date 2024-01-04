@@ -19,7 +19,7 @@
    - [x] 해당 초대 코드를 REDIS에서 삭제
 
 
-### 그룹(워크스페이스) 초대 API
+### 그룹(워크스페이스) 초대 
 
 POST `/invite`
 
@@ -41,7 +41,7 @@ POST `/invite`
 }
 ```
 
-### 초대 승낙 API
+### 초대 승인
 
 GET `/accept/{code}`
 
@@ -53,8 +53,22 @@ GET `/accept/{code}`
 }
 ```
 
----
+
+### 맴버 조회 
+
+GET `/member/{id}`
+
+**Response Body**
+
+```
+{
+  "id":1,
+  "name":"soon",
+  "phoneNumber":"00000000000",
+  "email":"soon@naver.com"
+}
+```
 
 ## 아키텍처 
-![img.png](img.png)
+![Alt text](<CS - Frame 1.jpg>)
 
