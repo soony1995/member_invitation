@@ -1,6 +1,5 @@
 package com.example.member_invitation.service;
 
-import ch.qos.logback.core.spi.ErrorCodes;
 import com.example.member_invitation.domain.Member;
 import com.example.member_invitation.exception.InviteException;
 import com.example.member_invitation.repository.MemberRepository;
@@ -8,14 +7,13 @@ import com.example.member_invitation.repository.RedisRepository;
 import com.example.member_invitation.type.ErrCode;
 import com.example.member_invitation.type.MemberStatus;
 import com.example.member_invitation.type.Response;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AcceptInviteCode {
+public class AcceptInviteService {
     private final RedisRepository redisRepository;
     private final MemberRepository memberRepository;
 

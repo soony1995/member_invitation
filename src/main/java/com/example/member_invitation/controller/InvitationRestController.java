@@ -2,7 +2,7 @@ package com.example.member_invitation.controller;
 
 import com.example.member_invitation.dto.AcceptInvite;
 import com.example.member_invitation.dto.CreateInviteCode;
-import com.example.member_invitation.service.AcceptInviteCode;
+import com.example.member_invitation.service.AcceptInviteService;
 import com.example.member_invitation.service.InvitationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class InvitationRestController {
     public final InvitationService invitationService;
-    public final AcceptInviteCode  acceptInviteCode;
+    public final AcceptInviteService acceptInviteService;
 
     @PostMapping("/invite")
     public CreateInviteCode.Response createInviteCode(@Valid @RequestBody final CreateInviteCode.Request request) {
@@ -21,7 +21,7 @@ public class InvitationRestController {
 
     @GetMapping("/accept/{code}")
     public AcceptInvite.Response acceptInviteCode(@PathVariable String code) {
-        return AcceptInvite.Response.from(acceptInviteCode.acceptInviteCode(code));
+        return AcceptInvite.Response.from(acceptInviteService.acceptInviteCode(code));
     }
 }
 

@@ -5,7 +5,9 @@ import lombok.*;
 
 public class CreateInviteCode {
     @Getter
-    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class Request {
         private String inviteMemberName;
         private String inviteMemberPhoneNumber;

@@ -28,12 +28,12 @@ class InvitationRestControllerTest {
     // controller 테스트
     @Test
     void successCreateInviteCode() throws Exception {
-        CreateInviteCode.Request requestDto = new CreateInviteCode.Request();
-        requestDto.setInviteMemberName("John Doe");
-        requestDto.setInviteMemberPhoneNumber("123-456-7890");
-        requestDto.setInviteMemberEmail("johndoe@example.com");
-        requestDto.setInviteGroupId(1234L);
-
+        CreateInviteCode.Request requestDto = new CreateInviteCode.Request().builder()
+                .inviteMemberEmail("johndoe@example.com")
+                .inviteMemberName("John")
+                .inviteGroupId(1341L)
+                .inviteMemberPhoneNumber("135135")
+                .build();
         mockMvc.perform(post("/invite")
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andDo(print()) // api 수행내역 로그 출력
@@ -53,5 +53,6 @@ class InvitationRestControllerTest {
 //                .andExpect(jsonPath("method").value("GET"))
 //                .andExpect(jsonPath("$.msg").exists()) // inviteCode 필드 존재 여부 검증
 //                .andExpect(jsonPath("$.msg").value("초대 코드 생성이 완료되었습니다.")); // inviteCode 필드 타입이 문자열인지 검증
+
     }
 }
