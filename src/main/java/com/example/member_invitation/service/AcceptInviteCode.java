@@ -7,6 +7,7 @@ import com.example.member_invitation.repository.MemberRepository;
 import com.example.member_invitation.repository.RedisRepository;
 import com.example.member_invitation.type.ErrCode;
 import com.example.member_invitation.type.MemberStatus;
+import com.example.member_invitation.type.Response;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class AcceptInviteCode {
         String memberName = checkValidCode(code);
         expireInviteCode(code);
         newMember(getMember(memberName));
-        return "초대 코드 처리 완료";
+        return Response.SUCCESS_CREATE_CODE.getDescription();
     }
 
     private void newMember(Member member) {
@@ -48,7 +49,8 @@ public class AcceptInviteCode {
 
     private String checkValidCode(String code) {
         String memberName = redisRepository.getValue(code);
-        if (memberName.isEmpty()) {
+        // isEmpty는 값이 null인지 확인해 주지 않기 때문에 memberName이 null 이라면 nullPointerException이 발생한다.
+        if (memberName == null || memberName.isEmpty()) {
             throw new InviteException(ErrCode.CODE_NOT_FOUND);
         }
         return memberName;

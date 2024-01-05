@@ -1,27 +1,23 @@
 package com.example.member_invitation.controller;
 
 import com.example.member_invitation.dto.CreateInviteCode;
-import com.example.member_invitation.service.InvitationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(InvitationRestController.class)
+
+@SpringBootTest
+@AutoConfigureMockMvc
 class InvitationRestControllerTest {
-
-    @MockBean
-    private InvitationService invitationService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -31,26 +27,31 @@ class InvitationRestControllerTest {
 
     // controller 테스트
     @Test
-    void successCreateAccount() throws Exception {
-        // given
-        CreateInviteCode.Request requestDto;
-        requestDto = new CreateInviteCode.Request();
+    void successCreateInviteCode() throws Exception {
+        CreateInviteCode.Request requestDto = new CreateInviteCode.Request();
         requestDto.setInviteMemberName("John Doe");
         requestDto.setInviteMemberPhoneNumber("123-456-7890");
         requestDto.setInviteMemberEmail("johndoe@example.com");
         requestDto.setInviteGroupId(1234L);
 
-        // when
-        String expectedString = " sample code " ;
-        given(invitationService.createInviteCode(any(CreateInviteCode.Request.class)))
-                .willReturn(expectedString);
-        // then
         mockMvc.perform(post("/invite")
-                        .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
+                .andDo(print()) // api 수행내역 로그 출력
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId").value(1))
-                .andExpect(jsonPath("$.accountNumber").value("1234567890"))
-                .andDo(print()); // print 해주는 메서드
+                .andExpect(jsonPath("$.inviteCode").exists()) // inviteCode 필드 존재 여부 검증
+                .andExpect(jsonPath("$.inviteCode").isString()); // inviteCode 필드 타입이 문자열인지 검증
+//                .andExpect(jsonPath("$.inviteCode").value("fdsfasd"));
+    }
+
+    @Test
+    @DisplayName("notFound")
+    void notFoundAcceptCode() throws Exception {
+        String code = "123123";
+        mockMvc.perform(get("/accept/"+code))
+                .andDo(print()) // api 수행내역 로그 출력
+                .andExpect(status().isNotFound());
+//                .andExpect(jsonPath("method").value("GET"))
+//                .andExpect(jsonPath("$.msg").exists()) // inviteCode 필드 존재 여부 검증
+//                .andExpect(jsonPath("$.msg").value("초대 코드 생성이 완료되었습니다.")); // inviteCode 필드 타입이 문자열인지 검증
     }
 }
